@@ -1,0 +1,8 @@
+# Temporary directories
+installer
+
+# Vim
+*.vim
+*.swp
+*.swo
+*.swn

@@ -1,0 +1,68 @@
+#!/bin/bash
+set -e
+
+export TAG_NAME=`git describe --tags | sed -e 's/_[0-9].*//'`
+export VERSION_NUM=`git describe --match "${TAG_NAME}_[0-9]*" HEAD | sed -e 's/-g.*//' -e "s/${TAG_NAME}_//"`
+export MAJOR_BUILD_NUM=`echo $VERSION_NUM | sed 's/-[^.]*$//' | sed -r 's/.[^.]*$//' | sed -r 's/.[^.]*$//'`
+export MINOR_BUILD_NUM=`echo $VERSION_NUM | sed 's/-[^.]*$//' | sed -r 's/.[^.]*$//' | sed -r 's/.[.]*//'`
+export REVISION_BUILD_NUM=`echo $VERSION_NUM | sed 's/-[^.]*$//' | sed -r 's/.*(.[0-9].)//'`
+export BUILD_NUM=`echo $VERSION_NUM | sed -e 's/[0-9].[0-9].[0-9]//' -e 's/-//'`
+
+if [ $TAG_NAME -z ]; then
+	TAG_NAME=unknown
+fi
+
+if [ $MAJOR_BUILD_NUM -z ]; then
+	MAJOR_BUILD_NUM=0
+fi
+
+if [ $MINOR_BUILD_NUM -z ]; then
+	MINOR_BUILD_NUM=0
+fi
+
+if [ $REVISION_BUILD_NUM -z ]; then
+	REVISION_BUILD_NUM=0
+fi
+
+if [ $BUILD_NUM -z ]; then
+	BUILD_NUM=0
+fi
+
+mkdir -p installer/config
+
+cat > installer/config/config.xml << __EOF__
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+	<Name>SEGA Saturn SDK</Name>
+	<Version>$MAJOR_BUILD_NUM.$MINOR_BUILD_NUM.$REVISION_BUILD_NUM.$BUILD_NUM</Version>
+	<Title>SEGA Saturn SDK</Title>
+	<Publisher>Open Game Developers</Publisher>
+	<TargetDir>@homeDir@/saturndev/saturn-sdk</TargetDir>
+	<AdminTargetDir>/opt/saturndev/saturn-sdk</AdminTargetDir>
+	<Watermark>watermark.png</Watermark>
+
+	<RemoteRepositories>
+		<Repository>
+			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/gcc/${BUILDMACH}</Url>
+		</Repository>
+	</RemoteRepositories>
+</Installer>
+__EOF__
+
+cp $ROOTDIR/images/watermark.png $ROOTDIR/installer/config
+
+cd $ROOTDIR/installer
+
+printf "Creating installer ... "
+
+mkdir -p nopackages
+
+$QTIFWDIR/bin/binarycreator -t $QTIFWDIR/bin/installerbase -p nopackages -c config/config.xml SEGA-Saturn-SDK_${BUILDMACH}_${TAG_NAME}_${MAJOR_BUILD_NUM}.${MINOR_BUILD_NUM}.${REVISION_BUILD_NUM}.${BUILD_NUM}.run
+
+if [ $? -ne "0" ]; then
+	printf "FAILED\n"
+	exit 1
+fi
+
+printf "OK\n"
+
