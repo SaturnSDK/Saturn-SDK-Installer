@@ -8,23 +8,23 @@ export MINOR_BUILD_NUM=`echo $VERSION_NUM | sed 's/-[^.]*$//' | sed -r 's/.[^.]*
 export REVISION_BUILD_NUM=`echo $VERSION_NUM | sed 's/-[^.]*$//' | sed -r 's/.*(.[0-9].)//'`
 export BUILD_NUM=`echo $VERSION_NUM | sed -e 's/[0-9].[0-9].[0-9]//' -e 's/-//'`
 
-if [ $TAG_NAME -z ]; then
+if [ -x $TAG_NAME ]; then
 	TAG_NAME=unknown
 fi
 
-if [ $MAJOR_BUILD_NUM -z ]; then
+if [ -z $MAJOR_BUILD_NUM ]; then
 	MAJOR_BUILD_NUM=0
 fi
 
-if [ $MINOR_BUILD_NUM -z ]; then
+if [ -z $MINOR_BUILD_NUM ]; then
 	MINOR_BUILD_NUM=0
 fi
 
-if [ $REVISION_BUILD_NUM -z ]; then
+if [ -z $REVISION_BUILD_NUM ]; then
 	REVISION_BUILD_NUM=0
 fi
 
-if [ $BUILD_NUM -z ]; then
+if [ -z $BUILD_NUM ]; then
 	BUILD_NUM=0
 fi
 
