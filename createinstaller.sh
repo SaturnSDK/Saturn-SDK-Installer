@@ -45,6 +45,9 @@ cat > installer/config/config.xml << __EOF__
 		<Repository>
 			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/gcc/${BUILDMACH}</Url>
 		</Repository>
+		<Repository>
+			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/sgl</Url>
+		</Repository>
 	</RemoteRepositories>
 </Installer>
 __EOF__
