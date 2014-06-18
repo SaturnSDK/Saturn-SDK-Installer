@@ -1,6 +1,19 @@
 #!/bin/bash
 set -e
 
+if [[ ${BUILDMACH} == "i686-w64-mingw32" ]]; then
+	EXTENSION=exe
+elif [[ ${BUILDMACH} == "x86_64-w64-mingw32" ]]; then
+	EXTENSION=exe
+elif [[ ${BUILDMACH} == "i686-pc-linux-gnu" ]]; then
+	EXTENSION=run
+elif [[ ${BUILDMACH} == "x86_64-pc-linux-gnu" ]]; then
+	EXTENSION=run
+else
+	echo "Unknown build architecture: ${BUILDMACH}"
+	exit 1
+fi
+
 export TAG_NAME=`git describe --tags | sed -e 's/_[0-9].*//'`
 export VERSION_NUM=`git describe --match "${TAG_NAME}_[0-9]*" HEAD | sed -e 's/-g.*//' -e "s/${TAG_NAME}_//"`
 export MAJOR_BUILD_NUM=`echo $VERSION_NUM | sed 's/-[^.]*$//' | sed -r 's/.[^.]*$//' | sed -r 's/.[^.]*$//'`
@@ -60,7 +73,7 @@ printf "Creating installer ... "
 
 mkdir -p nopackages
 
-$QTIFWDIR/bin/binarycreator -t $QTIFWDIR/bin/installerbase -p nopackages -c config/config.xml SEGA-Saturn-SDK_${BUILDMACH}_${TAG_NAME}_${MAJOR_BUILD_NUM}.${MINOR_BUILD_NUM}.${REVISION_BUILD_NUM}.${BUILD_NUM}.run
+$QTIFWDIR/bin/binarycreator -p nopackages -c config/config.xml SEGA-Saturn-SDK_${BUILDMACH}_${TAG_NAME}_${MAJOR_BUILD_NUM}.${MINOR_BUILD_NUM}.${REVISION_BUILD_NUM}.${BUILD_NUM}.${EXTENSION}
 
 if [ $? -ne "0" ]; then
 	printf "FAILED\n"
