@@ -1,16 +1,42 @@
 #!/bin/bash
 set -e
 
-if [[ ${BUILDMACH} == "i686-w64-mingw32" ]]; then
+mkdir -p $DOWNLOADDIR
+
+if [[ ${HOSTMACH} == "i686-w64-mingw32" ]]; then
 	EXTENSION=exe
-elif [[ ${BUILDMACH} == "x86_64-w64-mingw32" ]]; then
+	ADMINDIR=?
+	INSTALLERBASE=$DOWNLOADDIR/qtifw-win-x86/ifw-bld/bin/installerbase.exe
+	cd $DOWNLOADDIR
+	wget -c http://download.qt-project.org/snapshots/ifw/1.5/2014-02-13_50/installer-framework-build-win-x86.7z
+	7z x -y -o$DOWNLOADDIR/qtifw-win-x86 $DOWNLOADDIR/installer-framework-build-win-x86.7z ifw-bld/bin/installerbase.exe
+	cd $ROOTDIR
+elif [[ ${HOSTMACH} == "x86_64-w64-mingw32" ]]; then
 	EXTENSION=exe
-elif [[ ${BUILDMACH} == "i686-pc-linux-gnu" ]]; then
+	ADMINDIR=?
+	INSTALLERBASE=$DOWNLOADDIR/qtifw-win-x64/ifw-bld/bin/installerbase.exe
+	cd $DOWNLOADDIR
+	wget -c http://download.qt-project.org/snapshots/ifw/1.5/2014-02-13_50/installer-framework-build-win-x86.7z
+	7z x -y -o$DOWNLOADDIR/qtifw-win-x64 $DOWNLOADDIR/installer-framework-build-win-x86.7z ifw-bld/bin/installerbase.exe
+	cd $ROOTDIR
+elif [[ ${HOSTMACH} == "i686-pc-linux-gnu" ]]; then
 	EXTENSION=run
-elif [[ ${BUILDMACH} == "x86_64-pc-linux-gnu" ]]; then
+	ADMINDIR=/opt/saturndev/saturn-sdk
+	INSTALLERBASE=$DOWNLOADDIR/qtifw-linux-x86/ifw-bld/bin/installerbase
+	cd $DOWNLOADDIR
+	wget -c http://download.qt-project.org/snapshots/ifw/1.5/2014-02-13_50/installer-framework-build-linux-x86.7z
+	7z x -y -o$DOWNLOADDIR/qtifw-linux-x86 $DOWNLOADDIR/installer-framework-build-linux-x86.7z ifw-bld/bin/installerbase
+	cd $ROOTDIR
+elif [[ ${HOSTMACH} == "x86_64-pc-linux-gnu" ]]; then
 	EXTENSION=run
+	ADMINDIR=/opt/saturndev/saturn-sdk
+	INSTALLERBASE=$DOWNLOADDIR/qtifw-linux-x64/ifw-bld/bin/installerbase
+	cd $DOWNLOADDIR
+	wget -c http://download.qt-project.org/snapshots/ifw/1.5/2014-02-13_50/installer-framework-build-linux-x64.7z
+	7z x -y -o$DOWNLOADDIR/qtifw-linux-x64 $DOWNLOADDIR/installer-framework-build-linux-x64.7z ifw-bld/bin/installerbase
+	cd $ROOTDIR
 else
-	echo "Unknown build architecture: ${BUILDMACH}"
+	echo "Unknown build architecture: ${HOSTMACH}"
 	exit 1
 fi
 
@@ -51,12 +77,12 @@ cat > installer/config/config.xml << __EOF__
 	<Title>SEGA Saturn SDK</Title>
 	<Publisher>Open Game Developers</Publisher>
 	<TargetDir>@homeDir@/saturndev/saturn-sdk</TargetDir>
-	<AdminTargetDir>/opt/saturndev/saturn-sdk</AdminTargetDir>
+	<AdminTargetDir>${ADMINDIR}</AdminTargetDir>
 	<Watermark>watermark.png</Watermark>
 
 	<RemoteRepositories>
 		<Repository>
-			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/gcc/${BUILDMACH}</Url>
+			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/gcc/${HOSTMACH}</Url>
 		</Repository>
 		<Repository>
 			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/sgl</Url>
@@ -73,7 +99,7 @@ printf "Creating installer ... "
 
 mkdir -p nopackages
 
-$QTIFWDIR/bin/binarycreator -p nopackages -c config/config.xml SEGA-Saturn-SDK_${BUILDMACH}_${TAG_NAME}_${MAJOR_BUILD_NUM}.${MINOR_BUILD_NUM}.${REVISION_BUILD_NUM}.${BUILD_NUM}.${EXTENSION}
+$QTIFWDIR/bin/binarycreator -t $INSTALLERBASE -p nopackages -c config/config.xml SEGA-Saturn-SDK_${HOSTMACH}_${TAG_NAME}_${MAJOR_BUILD_NUM}.${MINOR_BUILD_NUM}.${REVISION_BUILD_NUM}.${BUILD_NUM}.${EXTENSION}
 
 if [ $? -ne "0" ]; then
 	printf "FAILED\n"

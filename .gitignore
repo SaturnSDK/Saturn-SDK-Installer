@@ -1,5 +1,6 @@
 # Temporary directories
 installer
+download
 
 # Vim
 *.vim
