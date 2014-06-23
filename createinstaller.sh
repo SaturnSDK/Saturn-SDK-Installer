@@ -82,10 +82,16 @@ cat > installer/config/config.xml << __EOF__
 
 	<RemoteRepositories>
 		<Repository>
-			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/gcc/${HOSTMACH}</Url>
+			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/gcc/coff/${HOSTMACH}</Url>
 		</Repository>
 		<Repository>
-			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/sgl</Url>
+			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/gcc/elf/${HOSTMACH}</Url>
+		</Repository>
+		<Repository>
+			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/sgl/coff</Url>
+		</Repository>
+		<Repository>
+			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/sgl/elf</Url>
 		</Repository>
 	</RemoteRepositories>
 </Installer>
