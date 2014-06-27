@@ -5,7 +5,7 @@ mkdir -p $DOWNLOADDIR
 
 if [[ ${HOSTMACH} == "i686-w64-mingw32" ]]; then
 	EXTENSION=exe
-	ADMINDIR="@RootDir@"
+	ADMINDIR="@rootDir@"
 	INSTALLERBASE=$DOWNLOADDIR/qtifw-win-x86/ifw-bld/bin/installerbase.exe
 	cd $DOWNLOADDIR
 	wget -c http://download.qt-project.org/snapshots/ifw/1.5/2014-02-13_50/installer-framework-build-win-x86.7z
@@ -13,7 +13,7 @@ if [[ ${HOSTMACH} == "i686-w64-mingw32" ]]; then
 	cd $ROOTDIR
 elif [[ ${HOSTMACH} == "x86_64-w64-mingw32" ]]; then
 	EXTENSION=exe
-	ADMINDIR="@RootDir@"
+	ADMINDIR="@rootDir@"
 	INSTALLERBASE=$DOWNLOADDIR/qtifw-win-x64/ifw-bld/bin/installerbase.exe
 	cd $DOWNLOADDIR
 	wget -c http://download.qt-project.org/snapshots/ifw/1.5/2014-02-13_50/installer-framework-build-win-x86.7z
@@ -99,7 +99,8 @@ cat > installer/config/config.xml << __EOF__
 </Installer>
 __EOF__
 
-cp $ROOTDIR/images/watermark.png $ROOTDIR/installer/config
+cp $ROOTDIR/images/watermark.png $ROOTDIR/installer/config/watermark.png
+cp $ROOTDIR/images/icon.png $ROOTDIR/installer/config/icon.png
 
 cd $ROOTDIR/installer
 
