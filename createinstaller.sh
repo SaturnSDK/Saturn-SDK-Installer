@@ -1,45 +1,58 @@
 #!/bin/bash
 set -e
 
+QTIFW_VER=`${QTIFWDIR}/bin/installerbase --version | sed 's/.* //' | sed 's/^"\(.*\)".*/\1/' | sed '1!d'`
+
+if [[ ${QTIFW_VER} != "2."* ]]; then
+	echo "Error: Qt Installer Framework version is not 2 or greater"
+	exit 1
+fi
+
 mkdir -p $DOWNLOADDIR
 
+function set_windows_vars_common( )
+{
+	EXTENSION=exe
+	ADMINDIR="@rootDir@"
+}
+
+function download_extract_windows( )
+{
+	INSTALLERBASE=$DOWNLOADDIR/qtifw-win-x86/bin/installerbase.exe
+	wget -O ${DOWNLOADDIR}/installer-framework-build-win-x86.exe -c https://download.qt.io/official_releases/qt-installer-framework/2.0.0/Qt%20Installer%20Framework%20Opensource%202.0.0.exe
+	7z x -y -o$DOWNLOADDIR/qtifw-win-x64 $DOWNLOADDIR/installer-framework-build-win-x86.exe bin/installerbase.exe
+}
+
+function set_linux_vars_common( )
+{
+	EXTENSION=run
+	ADMINDIR=/opt/saturndev/saturn-sdk
+}
+
+cd $DOWNLOADDIR
+
 if [[ ${HOSTMACH} == "i686-w64-mingw32" ]]; then
-	EXTENSION=exe
-	ADMINDIR="@rootDir@"
-	INSTALLERBASE=$DOWNLOADDIR/qtifw-win-x86/ifw-bld/bin/installerbase.exe
-	cd $DOWNLOADDIR
-	wget -c http://download.qt-project.org/snapshots/ifw/1.5/2014-02-13_50/installer-framework-build-win-x86.7z
-	7z x -y -o$DOWNLOADDIR/qtifw-win-x86 $DOWNLOADDIR/installer-framework-build-win-x86.7z ifw-bld/bin/installerbase.exe
-	cd $ROOTDIR
+	set_windows_vars_common
+	download_extract_windows
 elif [[ ${HOSTMACH} == "x86_64-w64-mingw32" ]]; then
-	EXTENSION=exe
-	ADMINDIR="@rootDir@"
-	INSTALLERBASE=$DOWNLOADDIR/qtifw-win-x64/ifw-bld/bin/installerbase.exe
-	cd $DOWNLOADDIR
-	wget -c http://download.qt-project.org/snapshots/ifw/1.5/2014-02-13_50/installer-framework-build-win-x86.7z
-	7z x -y -o$DOWNLOADDIR/qtifw-win-x64 $DOWNLOADDIR/installer-framework-build-win-x86.7z ifw-bld/bin/installerbase.exe
-	cd $ROOTDIR
+	set_windows_vars_common
+	download_extract_windows
 elif [[ ${HOSTMACH} == "i686-pc-linux-gnu" ]]; then
-	EXTENSION=run
-	ADMINDIR=/opt/saturndev/saturn-sdk
+	set_linux_vars_common
+	mkdir -p ${DOWNLOADDIR}/qtifw-linux-x86/ifw-bld/bin
 	INSTALLERBASE=$DOWNLOADDIR/qtifw-linux-x86/ifw-bld/bin/installerbase
-	cd $DOWNLOADDIR
-	wget -c http://download.qt-project.org/snapshots/ifw/1.5/2014-02-13_50/installer-framework-build-linux-x86.7z
-	7z x -y -o$DOWNLOADDIR/qtifw-linux-x86 $DOWNLOADDIR/installer-framework-build-linux-x86.7z ifw-bld/bin/installerbase
-	cd $ROOTDIR
+	wget -c -O ${DOWNLOADDIR}/qtifw-linux-x86/ifw-bld/bin/installerbase ftp://opengamedevelopers.org/qtifw/2.0.0/linux-x86/bin/installerbase 
 elif [[ ${HOSTMACH} == "x86_64-pc-linux-gnu" ]]; then
-	EXTENSION=run
-	ADMINDIR=/opt/saturndev/saturn-sdk
+	set_linux_vars_common
 	INSTALLERBASE=$DOWNLOADDIR/qtifw-linux-x64/ifw-bld/bin/installerbase
-	cd $DOWNLOADDIR
 	wget -c http://download.qt-project.org/snapshots/ifw/1.5/2014-02-13_50/installer-framework-build-linux-x64.7z
 	7z x -y -o$DOWNLOADDIR/qtifw-linux-x64 $DOWNLOADDIR/installer-framework-build-linux-x64.7z ifw-bld/bin/installerbase
-	cd $ROOTDIR
 else
 	echo "Unknown build architecture: ${HOSTMACH}"
 	exit 1
 fi
 
+cd $ROOTDIR
 export TAG_NAME=`git describe --tags | sed -e 's/_[0-9].*//'`
 export VERSION_NUM=`git describe --match "${TAG_NAME}_[0-9]*" HEAD | sed -e 's/-g.*//' -e "s/${TAG_NAME}_//"`
 export MAJOR_BUILD_NUM=`echo $VERSION_NUM | sed 's/-[^.]*$//' | sed -r 's/.[^.]*$//' | sed -r 's/.[^.]*$//'`
