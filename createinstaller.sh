@@ -20,7 +20,7 @@ function download_extract_windows( )
 {
 	INSTALLERBASE=$DOWNLOADDIR/qtifw-win-x86/bin/installerbase.exe
 	wget -O ${DOWNLOADDIR}/installer-framework-build-win-x86.exe -c https://download.qt.io/official_releases/qt-installer-framework/2.0.0/Qt%20Installer%20Framework%20Opensource%202.0.0.exe
-	7z x -y -o$DOWNLOADDIR/qtifw-win-x64 $DOWNLOADDIR/installer-framework-build-win-x86.exe bin/installerbase.exe
+	7z x -y -o$DOWNLOADDIR/qtifw-win-x86 $DOWNLOADDIR/installer-framework-build-win-x86.exe bin/installerbase.exe
 }
 
 function set_linux_vars_common( )
