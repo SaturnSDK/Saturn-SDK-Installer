@@ -8,7 +8,7 @@ if [[ ${QTIFW_VER} != "2."* ]]; then
 	exit 1
 fi
 
-mkdir -p $DOWNLOADDIR
+mkdir -p ${DOWNLOADDIR}
 
 function set_windows_vars_common( )
 {
@@ -18,9 +18,9 @@ function set_windows_vars_common( )
 
 function download_extract_windows( )
 {
-	INSTALLERBASE=$DOWNLOADDIR/qtifw-win-x86/bin/installerbase.exe
-	wget -O ${DOWNLOADDIR}/installer-framework-build-win-x86.exe -c https://download.qt.io/official_releases/qt-installer-framework/2.0.0/Qt%20Installer%20Framework%20Opensource%202.0.0.exe
-	7z x -y -o$DOWNLOADDIR/qtifw-win-x64 $DOWNLOADDIR/installer-framework-build-win-x86.exe bin/installerbase.exe
+	INSTALLERBASE=${DOWNLOADDIR}/qtifw-win-x86/ifw-bld/bin/installerbase.exe
+	wget -c http://download.qt.io/snapshots/ifw/2.0/2015-04-20_5/installer-framework-build-win-x86.7z
+	7z x -y -o${DOWNLOADDIR}/qtifw-win-x86 ${DOWNLOADDIR}/installer-framework-build-win-x86.7z ifw-bld/bin/installerbase.exe
 }
 
 function set_linux_vars_common( )
@@ -29,7 +29,7 @@ function set_linux_vars_common( )
 	ADMINDIR=/opt/saturndev/saturn-sdk
 }
 
-cd $DOWNLOADDIR
+cd ${DOWNLOADDIR}
 
 if [[ ${HOSTMACH} == "i686-w64-mingw32" ]]; then
 	set_windows_vars_common
@@ -39,14 +39,14 @@ elif [[ ${HOSTMACH} == "x86_64-w64-mingw32" ]]; then
 	download_extract_windows
 elif [[ ${HOSTMACH} == "i686-pc-linux-gnu" ]]; then
 	set_linux_vars_common
-	mkdir -p ${DOWNLOADDIR}/qtifw-linux-x86/ifw-bld/bin
-	INSTALLERBASE=$DOWNLOADDIR/qtifw-linux-x86/ifw-bld/bin/installerbase
-	wget -c -O ${DOWNLOADDIR}/qtifw-linux-x86/ifw-bld/bin/installerbase ftp://opengamedevelopers.org/qtifw/2.0.0/linux-x86/bin/installerbase 
+	INSTALLERBASE=${DOWNLOADDIR}/qtifw-linux-x86/ifw-bld/bin/installerbase
+	wget -c http://download.qt.io/snapshots/ifw/2.0/2015-04-20_5/installer-framework-build-linux-32.7z
+	7z x -y -o${DOWNLOADDIR}/qtifw-linux-x86 ${DOWNLOADDIR}/installer-framework-build-linux-32.7z ifw-bld/bin/installerbase
 elif [[ ${HOSTMACH} == "x86_64-pc-linux-gnu" ]]; then
 	set_linux_vars_common
-	INSTALLERBASE=$DOWNLOADDIR/qtifw-linux-x64/ifw-bld/bin/installerbase
-	wget -c http://download.qt-project.org/snapshots/ifw/1.5/2014-02-13_50/installer-framework-build-linux-x64.7z
-	7z x -y -o$DOWNLOADDIR/qtifw-linux-x64 $DOWNLOADDIR/installer-framework-build-linux-x64.7z ifw-bld/bin/installerbase
+	INSTALLERBASE=${DOWNLOADDIR}/qtifw-linux-x64/ifw-bld/bin/installerbase
+	wget -c http://download.qt.io/snapshots/ifw/2.0/2015-04-20_5/installer-framework-build-linux-x64.7z
+	7z x -y -o${DOWNLOADDIR}/qtifw-linux-x64 ${DOWNLOADDIR}/installer-framework-build-linux-x64.7z ifw-bld/bin/installerbase
 else
 	echo "Unknown build architecture: ${HOSTMACH}"
 	exit 1
