@@ -102,6 +102,9 @@ cat > installer/config/config.xml << __EOF__
 		<Repository>
 			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/make/${HOSTMACH}</Url>
 		</Repository>
+		<Repository>
+			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/ide/${HOSTMACH}</Url>
+		</Repository>
 	</RemoteRepositories>
 </Installer>
 __EOF__
