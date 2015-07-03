@@ -126,7 +126,7 @@ cat > packages/base/meta/package.xml << __EOF__
 	<DisplayName>Base</DisplayName>
 	<Description>Required installation option</Description>
 	<ReleaseDate>2015-07-01</ReleaseDate>
-	<Version>1.0.0-0</Version>
+	<Version>$MAJOR_BUILD_NUM.$MINOR_BUILD_NUM.$REVISION_BUILD_NUM.$BUILD_NUM</Version>
 	<Script>installscript.qs</Script>
 </Package>
 __EOF__
