@@ -116,9 +116,39 @@ cd $ROOTDIR/installer
 
 printf "Creating installer ... "
 
-mkdir -p nopackages
+mkdir -p packages/base/{meta,data}
 
-$QTIFWDIR/bin/binarycreator -t $INSTALLERBASE -p nopackages -c config/config.xml SEGA-Saturn-SDK_${HOSTMACH}_${TAG_NAME}_${MAJOR_BUILD_NUM}.${MINOR_BUILD_NUM}.${REVISION_BUILD_NUM}.${BUILD_NUM}.${EXTENSION}
+cat > packages/base/meta/package.xml << __EOF__
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+	<Name>base</Name>
+	<ForcedInstallation>true</ForcedInstallation>
+	<DisplayName>Base</DisplayName>
+	<Description>Required installation option</Description>
+	<ReleaseDate>2015-07-01</ReleaseDate>
+	<Version>1.0.0-0</Version>
+	<Script>installscript.qs</Script>
+</Package>
+__EOF__
+
+cat > packages/base/meta/installscript.qs << __EOF__
+function Component( )
+{
+}
+
+Component.prototype.createOperations = function( )
+{
+	component.createOperations( );
+
+	if( installer.value( "os" ) === "win" )
+	{
+		component.addOperation( "EnvironmentVariable", "SATURN_ROOT",
+			"@TargetDir@", true );
+	}
+}
+__EOF__
+
+$QTIFWDIR/bin/binarycreator -t $INSTALLERBASE -p packages -c config/config.xml SEGA-Saturn-SDK_${HOSTMACH}_${TAG_NAME}_${MAJOR_BUILD_NUM}.${MINOR_BUILD_NUM}.${REVISION_BUILD_NUM}.${BUILD_NUM}.${EXTENSION}
 
 if [ $? -ne "0" ]; then
 	printf "FAILED\n"
