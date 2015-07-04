@@ -140,6 +140,21 @@ Component.prototype.createOperations = function( )
 {
 	component.createOperations( );
 
+	if( installer.value( "os" ) === "x11" )
+	{
+		var Args = [ "export SATURN_ROOT=", "@homeDir@/.bashrc" ];
+		var Output = installer.execute( "grep", Args );
+		if( Output[ 1 ] === 0 )
+		{
+			component.addOperation( "LineReplace", "@homeDir@/.bashrc",
+				"export SATURN_ROOT=", "export SATURN_ROOT=@TargetDir@" );
+		}
+		else
+		{
+			component.addOperation( "AppendFile", "@homeDir@/.bashrc",
+				"export SATURN_ROOT=@TargetDir@" );
+		}
+	}
 	if( installer.value( "os" ) === "win" )
 	{
 		component.addOperation( "EnvironmentVariable", "SATURN_ROOT",
