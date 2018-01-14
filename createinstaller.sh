@@ -18,9 +18,9 @@ function set_windows_vars_common( )
 
 function download_extract_windows( )
 {
-	INSTALLERBASE=${DOWNLOADDIR}/qtifw-win-x86/ifw-bld/bin/installerbase.exe
-	wget -c http://download.qt.io/snapshots/ifw/2.0/2015-04-20_5/installer-framework-build-win-x86.7z
-	7z x -y -o${DOWNLOADDIR}/qtifw-win-x86 ${DOWNLOADDIR}/installer-framework-build-win-x86.7z ifw-bld/bin/installerbase.exe
+	INSTALLERBASE=${DOWNLOADDIR}/qtifw-win-x86/ifw-pkg/bin/installerbase.exe
+	wget -c http://download.qt.io/snapshots/ifw/installer-framework/30/installer-framework-build-stripped-win-x86.7z
+	7z x -y -o${DOWNLOADDIR}/qtifw-win-x86 ${DOWNLOADDIR}/installer-framework-build-stripped-win-x86.7z ifw-pkg/bin/installerbase.exe
 }
 
 function set_linux_vars_common( )
@@ -39,14 +39,14 @@ elif [[ ${HOSTMACH} == "x86_64-w64-mingw32" ]]; then
 	download_extract_windows
 elif [[ ${HOSTMACH} == "i686-pc-linux-gnu" ]]; then
 	set_linux_vars_common
-	INSTALLERBASE=${DOWNLOADDIR}/qtifw-linux-x86/ifw-bld/bin/installerbase
-	wget -c http://download.qt.io/snapshots/ifw/2.0/2015-04-20_5/installer-framework-build-linux-32.7z
-	7z x -y -o${DOWNLOADDIR}/qtifw-linux-x86 ${DOWNLOADDIR}/installer-framework-build-linux-32.7z ifw-bld/bin/installerbase
+	INSTALLERBASE=${DOWNLOADDIR}/qtifw-linux-x86/ifw-pkg/bin/installerbase
+	wget -c http://download.qt.io/snapshots/ifw/installer-framework/30/installer-framework-build-stripped-linux-x86.7z
+	7z x -y -o${DOWNLOADDIR}/qtifw-linux-x86 ${DOWNLOADDIR}/installer-framework-build-stripped-linux-x86.7z ifw-pkg/bin/installerbase
 elif [[ ${HOSTMACH} == "x86_64-pc-linux-gnu" ]]; then
 	set_linux_vars_common
-	INSTALLERBASE=${DOWNLOADDIR}/qtifw-linux-x64/ifw-bld/bin/installerbase
-	wget -c http://download.qt.io/snapshots/ifw/2.0/2015-04-20_5/installer-framework-build-linux-x64.7z
-	7z x -y -o${DOWNLOADDIR}/qtifw-linux-x64 ${DOWNLOADDIR}/installer-framework-build-linux-x64.7z ifw-bld/bin/installerbase
+	INSTALLERBASE=${DOWNLOADDIR}/qtifw-linux-x64/ifw-pkg/bin/installerbase
+	wget -c http://download.qt.io/snapshots/ifw/installer-framework/30/installer-framework-build-stripped-linux-x64.7z
+	7z x -y -o${DOWNLOADDIR}/qtifw-linux-x64 ${DOWNLOADDIR}/installer-framework-build-stripped-linux-x64.7z ifw-pkg/bin/installerbase
 else
 	echo "Unknown build architecture: ${HOSTMACH}"
 	exit 1
@@ -88,7 +88,7 @@ cat > installer/config/config.xml << __EOF__
 	<Name>SEGA Saturn SDK</Name>
 	<Version>$MAJOR_BUILD_NUM.$MINOR_BUILD_NUM.$REVISION_BUILD_NUM.$BUILD_NUM</Version>
 	<Title>SEGA Saturn SDK</Title>
-	<Publisher>Open Game Developers</Publisher>
+	<Publisher>SEGA Dev</Publisher>
 	<TargetDir>@homeDir@/saturndev/saturn-sdk</TargetDir>
 	<AdminTargetDir>${ADMINDIR}</AdminTargetDir>
 	<Watermark>watermark.png</Watermark>
