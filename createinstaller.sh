@@ -97,13 +97,13 @@ cat > installer/config/config.xml << __EOF__
 
 	<RemoteRepositories>
 		<Repository>
-			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/gcc/elf/${HOSTMACH}</Url>
+			<Url>http://files.segadev.net/saturn-sdk/installer/repo/gcc/elf/${HOSTMACH}</Url>
 		</Repository>
 		<Repository>
-			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/make/${HOSTMACH}</Url>
+			<Url>http://files.segadev.net/saturn-sdk/installer/repo/make/${HOSTMACH}</Url>
 		</Repository>
 		<Repository>
-			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/ide/${HOSTMACH}</Url>
+			<Url>http://files.segadev.net/saturn-sdk/installer/repo/ide/${HOSTMACH}</Url>
 		</Repository>
 __EOF__
 
@@ -111,7 +111,7 @@ __EOF__
 if [[ "${HOSTMACH}" == "i686-w64-mingw32" ]] || [[ "${HOSTMACH}" == "x86_64-w64-mingw32" ]]; then
 cat >> installer/config/config.xml << __EOF__
 		<Repository>
-			<Url>ftp://opengamedevelopers.org/saturn-sdk/installer/repo/msys2/${HOSTMACH}</Url>
+			<Url>http://files.segadev.net/saturn-sdk/installer/repo/msys2/${HOSTMACH}</Url>
 		</Repository>
 __EOF__
 fi
